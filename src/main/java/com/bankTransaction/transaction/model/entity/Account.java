@@ -32,4 +32,11 @@ public class Account {
 
    // private List<Card> cards;
 
+
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
+    private Customer customer;
+
 }

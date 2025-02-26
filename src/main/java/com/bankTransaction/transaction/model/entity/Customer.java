@@ -35,4 +35,9 @@ public class Customer {
     @Column(name = "customer_status", nullable = false)
     private CustomerStatus customerStatus;
 
+    @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Account> accounts;
+
+
+
 }
