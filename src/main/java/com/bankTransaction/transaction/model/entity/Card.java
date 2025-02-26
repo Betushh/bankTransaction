@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Data
 @RequiredArgsConstructor
 @Entity
@@ -27,5 +29,5 @@ public class Card {
     @Column(name = "card_status", nullable = false)
     private CardStatus cardStatus;
 
-
+//    private List<Transaction> transactions;
 }

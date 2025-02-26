@@ -2,11 +2,14 @@ package com.bankTransaction.transaction.model.entity;
 
 
 import com.bankTransaction.transaction.enumeration.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -26,5 +29,7 @@ public class Account {
 
     @Column(name = "account_status")
     private AccountStatus accountStatus;
+
+   // private List<Card> cards;
 
 }

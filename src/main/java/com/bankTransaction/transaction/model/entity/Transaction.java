@@ -33,6 +33,10 @@ public class Transaction {
     @Column(name = "account_receiver", nullable = false)
     private String accountReceiver;
 
+//    private Card senderCard;
+
+//    private Card receiverCard;
+
 
 
 }

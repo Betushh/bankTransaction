@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Data
 @RequiredArgsConstructor
 @Entity
@@ -32,4 +34,5 @@ public class Customer {
     @Enumerated
     @Column(name = "customer_status", nullable = false)
     private CustomerStatus customerStatus;
+
 }
