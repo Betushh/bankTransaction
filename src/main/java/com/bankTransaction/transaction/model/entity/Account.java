@@ -18,10 +18,10 @@ import java.util.List;
 public class Account extends BaseEntity{
 
     @Column(name = "account_number", nullable = false)
-    private Long accountNumber;
+    private String accountNumber;
 
     @Column(nullable = false)
-    private Double balance;
+    private BigDecimal balance;
 
     @Enumerated
     @Column(name = "account_status")

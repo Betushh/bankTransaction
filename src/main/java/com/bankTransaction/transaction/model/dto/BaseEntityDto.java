@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class BaseEntityDto {
+public abstract class BaseEntityDto {
 
     private Long id;
     private Date createdAt;

@@ -8,9 +8,8 @@ import java.util.Date;
 
 @Data
 @RequiredArgsConstructor
-@Entity
-@Table(name = "base")
-public class BaseEntity {
+@MappedSuperclass
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

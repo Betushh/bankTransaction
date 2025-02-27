@@ -40,6 +40,15 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = "receiver_card_id")
     private Card receiverCard;
 
+    @OneToOne
+    @JoinColumn(name = "source_account")
+    private Account sourceAccount;
+
+    @OneToOne
+    @JoinColumn(name = "source_card")
+    private Card sourceCard;
+
+
 
 
 }

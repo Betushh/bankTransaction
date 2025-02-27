@@ -20,4 +20,6 @@ public class TransactionDto extends BaseEntity {
     private Account receiver;
     private Card senderCard;
     private Card receiverCard;
+    private Account sourceAccount;
+    private Card sourceCard;
 }

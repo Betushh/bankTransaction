@@ -1,6 +1,7 @@
 package com.bankTransaction.transaction.model.dto;
 
 import com.bankTransaction.transaction.enumeration.CardStatus;
+import com.bankTransaction.transaction.model.entity.Account;
 import com.bankTransaction.transaction.model.entity.BaseEntity;
 import com.bankTransaction.transaction.model.entity.Customer;
 import com.bankTransaction.transaction.model.entity.Transaction;
@@ -17,6 +18,6 @@ public class CardDto extends BaseEntity {
     private Long cardHolderName;
     private Long cvv;
     private CardStatus cardStatus;
-    private Customer customer;
+    private Account account;
     private List<Transaction> transactions;
 }

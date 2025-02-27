@@ -32,8 +32,8 @@ public class Card extends BaseEntity{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
-    private Customer customer;
+    private Account account;
 
-    @OneToMany(mappedBy = "card",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "senderCard",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 }
