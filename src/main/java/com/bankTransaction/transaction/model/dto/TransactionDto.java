@@ -2,24 +2,22 @@ package com.bankTransaction.transaction.model.dto;
 
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
 import com.bankTransaction.transaction.enumeration.TransactionType;
+import com.bankTransaction.transaction.model.entity.Account;
+import com.bankTransaction.transaction.model.entity.BaseEntity;
+import com.bankTransaction.transaction.model.entity.Card;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @RequiredArgsConstructor
-public class TransactionDto {
+public class TransactionDto extends BaseEntity {
 
-    private Long id;
     private TransactionType transactionType;
 
-    private BigDecimal amount;
+    private Double amount;
     private TransactionStatus transactionStatus;
-    private String accountSender;
-    private String accountReceiver;
-
-//    private Card senderCard;
-
-//    private Card receiverCard;
+    private Account sender;
+    private Account receiver;
+    private Card senderCard;
+    private Card receiverCard;
 }

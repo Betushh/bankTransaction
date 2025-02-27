@@ -7,35 +7,38 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
 
 @Data
 @RequiredArgsConstructor
 @Entity
 @Table(name = "transaction")
-public class Transaction {
+public class Transaction extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Enumerated
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
 
-    private BigDecimal amount;
+    private Double amount;
 
+    @Enumerated
     @Column(name = "transaction_status", nullable = false)
     private TransactionStatus transactionStatus;
 
-    @Column(name = "account_sender", nullable = false)
-    private String accountSender;
+    @ManyToOne
+    @JoinColumn(name = "sender_account_id")
+    private Account sender;
 
-    @Column(name = "account_receiver", nullable = false)
-    private String accountReceiver;
+    @ManyToOne
+    @JoinColumn(name = "receiver_account_id")
+    private Account receiver;
 
-//    private Card senderCard;
+    @ManyToOne
+    @JoinColumn(name = "sender_card_id")
+    private Card senderCard;
 
-//    private Card receiverCard;
+    @ManyToOne
+    @JoinColumn(name = "receiver_card_id")
+    private Card receiverCard;
 
 
 

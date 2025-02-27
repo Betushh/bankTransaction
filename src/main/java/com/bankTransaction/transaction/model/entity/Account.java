@@ -15,28 +15,25 @@ import java.util.List;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "accounts")
-public class Account {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Account extends BaseEntity{
 
     @Column(name = "account_number", nullable = false)
     private Long accountNumber;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private Double balance;
 
+    @Enumerated
     @Column(name = "account_status")
     private AccountStatus accountStatus;
-
-   // private List<Card> cards;
-
 
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private Customer customer;
+
+    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Card> linkedCards;
 
 }

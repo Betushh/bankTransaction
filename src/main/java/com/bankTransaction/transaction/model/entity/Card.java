@@ -1,9 +1,11 @@
 package com.bankTransaction.transaction.model.entity;
 
 import com.bankTransaction.transaction.enumeration.CardStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -11,11 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "cards")
-public class Card {
+public class Card extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(name = "card_number", nullable = false)
     private Long cardNumber;
 
@@ -29,5 +28,12 @@ public class Card {
     @Column(name = "card_status", nullable = false)
     private CardStatus cardStatus;
 
-//    private List<Transaction> transactions;
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
+    private Customer customer;
+
+    @OneToMany(mappedBy = "card",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }

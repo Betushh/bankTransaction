@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
