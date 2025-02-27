@@ -22,8 +22,6 @@ public class Customer extends BaseEntity{
     private String firsName;
     @Column(name = "lastname", nullable = false)
     private String lastName;
-    @Column(name = "middlename")
-    private String middleName;
 
     @Column(nullable = false)
     private String mail;

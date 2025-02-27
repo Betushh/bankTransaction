@@ -1,6 +1,5 @@
 package com.bankTransaction.transaction.service.serviceImp;
 
-import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.bankTransaction.transaction.model.entity.Account;
 import com.bankTransaction.transaction.model.entity.Customer;
 import com.bankTransaction.transaction.repository.AccountRepository;
