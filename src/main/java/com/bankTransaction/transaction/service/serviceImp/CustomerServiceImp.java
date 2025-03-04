@@ -1,18 +1,17 @@
 package com.bankTransaction.transaction.service.serviceImp;
 
-import com.bankTransaction.transaction.model.entity.Account;
+import com.bankTransaction.transaction.mapper.CustomerMapper;
+import com.bankTransaction.transaction.model.dto.CustomerDto;
+import com.bankTransaction.transaction.model.dto.request.AddCustomerRequestDto;
 import com.bankTransaction.transaction.model.entity.Customer;
-import com.bankTransaction.transaction.repository.AccountRepository;
 import com.bankTransaction.transaction.repository.CustomerRepository;
 import com.bankTransaction.transaction.service.CustomerService;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,11 +19,11 @@ import java.util.Optional;
 public class CustomerServiceImp implements CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final AccountRepository accountRepository;
+    private final CustomerMapper customerMapper;
 
     @Override
-    public List<Customer> getList() {
-        return customerRepository.findAll();
+    public List<CustomerDto> getList() {
+        return customerMapper.toStudentDtoList(customerRepository.findAll());
     }
 
     @Override
@@ -33,18 +32,10 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    @Transactional
-    public Customer add(Customer customer) {
-       Customer savedCustomer =  customerRepository.save(customer);
-
-        Account defaultAccount = new Account();
-        defaultAccount.setAccountNumber(generateAccountNumber());
-        defaultAccount.setBalance(BigDecimal.valueOf(0.0));
-        defaultAccount.setAccountStatus(AccountStatus.ACTIVE);
-        defaultAccount.setCustomer(savedCustomer);
-
-        accountRepository.save(defaultAccount);
-        return savedCustomer;
+    public CustomerDto add(AddCustomerRequestDto addCustomerRequestDto) {
+        var customer = customerMapper.toCustomer(addCustomerRequestDto);
+        var savedCustomer = customerRepository.save(customer);
+        return customerMapper.toCustomerDto(savedCustomer);
     }
 
     @Override
@@ -63,6 +54,6 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     private String generateAccountNumber() {
-        return "ACC" + System.currentTimeMillis();
+        return "ACC" + UUID.randomUUID();
     }
 }

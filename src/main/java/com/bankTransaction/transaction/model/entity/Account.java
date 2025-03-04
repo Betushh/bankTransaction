@@ -1,6 +1,7 @@
 package com.bankTransaction.transaction.model.entity;
 
 
+import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,6 +21,10 @@ public class Account extends BaseEntity{
 
     @Column(nullable = false)
     private BigDecimal balance;
+
+    @Enumerated
+    @Column(name = "account_status", nullable = false)
+    private AccountStatus accountStatus;
 
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)

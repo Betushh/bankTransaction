@@ -1,6 +1,6 @@
 package com.bankTransaction.transaction.enumeration;
 
-public enum CustomerStatus {
+public enum AccountStatus {
     ACTIVE,
     INACTIVE,
     BLOCKED;
