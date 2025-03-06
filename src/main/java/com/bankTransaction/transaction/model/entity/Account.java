@@ -4,15 +4,15 @@ package com.bankTransaction.transaction.model.entity;
 import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "accounts")
 public class Account extends BaseEntity{
 

@@ -5,12 +5,10 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AddCustomerRequestDto {
-
+public class UpdateCustomerRequestDto {
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
     private LocalDate dateOfBirth;
-//password????
 }

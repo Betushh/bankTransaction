@@ -2,18 +2,18 @@ package com.bankTransaction.transaction.service;
 
 import com.bankTransaction.transaction.model.dto.CustomerDto;
 import com.bankTransaction.transaction.model.dto.request.AddCustomerRequestDto;
-import com.bankTransaction.transaction.model.entity.Customer;
+import com.bankTransaction.transaction.model.dto.request.UpdateCustomerRequestDto;
 
 import java.util.List;
 
 public interface CustomerService {
     List<CustomerDto> getList();
 
-    Customer getCustomerByID(Integer id, String name);
+    CustomerDto getCustomerByID(Integer id);
 
     CustomerDto add(AddCustomerRequestDto addCustomerRequestDto);
 
-    Customer update(Integer id, Customer customer);
+    CustomerDto update(Integer id, UpdateCustomerRequestDto updateCustomerRequestDto);
 
     void delete(Integer id);
 }

@@ -2,9 +2,11 @@ package com.bankTransaction.transaction.model.dto;
 
 import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.bankTransaction.transaction.model.entity.Account;
+import com.bankTransaction.transaction.model.entity.Customer;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,14 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerDto {
 
-    private Long id;
-    private String firsName;
+    private String firstName;
     private String lastName;
     private String email;
     private String phone;
    private LocalDate dateOfBirth;
     private List<Account> accounts;
 
-
+    @Data
+private static class AccountDto{
+    private String accountNumber;
+    private BigDecimal balance;
+    private Customer customer;
+    private AccountStatus accountStatus;
+}
 
 }
