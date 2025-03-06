@@ -36,7 +36,7 @@ public class CustomerController {
         return customerService.add(addCustomerRequestDto);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDto update(@PathVariable Integer id,@RequestBody UpdateCustomerRequestDto updateCustomerRequestDto) {
         return customerService.update(id,updateCustomerRequestDto);

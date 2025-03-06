@@ -70,6 +70,7 @@ public class CustomerServiceImp implements CustomerService {
     private Customer getUpdatedCustomer(Integer id, UpdateCustomerRequestDto customer) {
         var optionalCustomer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
+        //pacth mapper
         String firstname = optionalCustomer.getFirstName().equalsIgnoreCase(customer.getFirstName())
                 ? optionalCustomer.getFirstName() : customer.getFirstName();
         String lastname = optionalCustomer.getLastName().equalsIgnoreCase(customer.getLastName()) ?
@@ -88,10 +89,10 @@ public class CustomerServiceImp implements CustomerService {
         return optionalCustomer;
     }
 
-    private Account getDefaultAccount(Customer customer){
+    private Account getDefaultAccount(Customer customer){//create
         return Account.builder()
                 .accountNumber(generateAccountNumber())
-                .balance(BigDecimal.ZERO)
+                .balance(BigDecimal.valueOf(100))
                 .accountStatus(AccountStatus.ACTIVE)
                 .customer(customer)
                 .build();

@@ -22,7 +22,7 @@ public class Account extends BaseEntity{
     @Column(nullable = false)
     private BigDecimal balance;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false)
     private AccountStatus accountStatus;
 

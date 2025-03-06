@@ -22,12 +22,5 @@ public class CustomerDto {
    private LocalDate dateOfBirth;
     private List<Account> accounts;
 
-    @Data
-private static class AccountDto{
-    private String accountNumber;
-    private BigDecimal balance;
-    private Customer customer;
-    private AccountStatus accountStatus;
-}
 
 }
