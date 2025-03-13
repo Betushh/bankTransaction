@@ -1,7 +1,7 @@
 package com.bankTransaction.transaction.service;
-import com.bankTransaction.transaction.model.dto.CustomerDto;
-import com.bankTransaction.transaction.model.dto.request.AddCustomerRequestDto;
-import com.bankTransaction.transaction.model.dto.request.UpdateCustomerRequestDto;
+import com.bankTransaction.transaction.model.dto.customer.CustomerDto;
+import com.bankTransaction.transaction.model.dto.customer.AddCustomerRequestDto;
+import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestDto;
 import java.util.List;
 
 public interface CustomerService {

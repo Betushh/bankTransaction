@@ -1,7 +1,6 @@
 package com.bankTransaction.transaction.mapper;
 
-import com.bankTransaction.transaction.model.dto.AccountDto;
-import com.bankTransaction.transaction.model.dto.CustomerDto;
+import com.bankTransaction.transaction.model.dto.account.AccountDto;
 import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
 import com.bankTransaction.transaction.model.entity.Account;
 import com.bankTransaction.transaction.model.entity.Customer;
@@ -16,6 +15,7 @@ public interface AccountMapper {
 
     Account toAccount(AddAccountRequestDto addAccountRequestDto);
 
+    Customer toCustomerAccount(AddAccountRequestDto addAccountRequestDto);
 
     List<AccountDto> toAccountDtoList(List<Account> accountList);
 }

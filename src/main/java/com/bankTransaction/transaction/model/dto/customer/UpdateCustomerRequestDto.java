@@ -1,4 +1,4 @@
-package com.bankTransaction.transaction.model.dto.request;
+package com.bankTransaction.transaction.model.dto.customer;
 
 import lombok.Data;
 

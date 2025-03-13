@@ -1,17 +1,24 @@
 package com.bankTransaction.transaction.service;
-import com.bankTransaction.transaction.model.dto.AccountDto;
-import com.bankTransaction.transaction.model.entity.Account;
+import com.bankTransaction.transaction.model.dto.account.AccountDto;
+import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountService {
 
     List<AccountDto> getList();
 
-    Account getAccountByID(Integer id);
+   List <AccountDto> getActiveAccountsByCustomerId(Integer id);
 
-    Account add(Account account);
+    AccountDto add(AddAccountRequestDto addAccountRequestDto);
 
-    Account update(Integer id, Account account);
+    List<AccountDto> getAccountsByCustomerId(Integer id);
+
+    AccountDto increaseAccountBalance(String accountNumber, BigDecimal amount);
+
+    AccountDto decreaseAccountBalance(String accountNumber, BigDecimal amount);
+
 
     void delete(Integer id);
 }

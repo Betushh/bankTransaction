@@ -1,16 +1,14 @@
 package com.bankTransaction.transaction.controller;
 
-import com.bankTransaction.transaction.model.dto.CustomerDto;
-import com.bankTransaction.transaction.model.dto.request.AddCustomerRequestDto;
-import com.bankTransaction.transaction.model.dto.request.UpdateCustomerRequestDto;
-import com.bankTransaction.transaction.model.entity.Customer;
+import com.bankTransaction.transaction.model.dto.customer.CustomerDto;
+import com.bankTransaction.transaction.model.dto.customer.AddCustomerRequestDto;
+import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestDto;
 import com.bankTransaction.transaction.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,8 +36,8 @@ public class CustomerController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDto update(@PathVariable Integer id,@RequestBody UpdateCustomerRequestDto updateCustomerRequestDto) {
-        return customerService.update(id,updateCustomerRequestDto);
+    public CustomerDto update(@PathVariable Integer id, @RequestBody UpdateCustomerRequestDto updateCustomerRequestDto) {
+        return customerService.update(id, updateCustomerRequestDto);
     }
 
     @DeleteMapping

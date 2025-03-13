@@ -2,11 +2,13 @@ package com.bankTransaction.transaction.service.serviceImp;
 
 import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.bankTransaction.transaction.mapper.CustomerMapper;
-import com.bankTransaction.transaction.model.dto.CustomerDto;
-import com.bankTransaction.transaction.model.dto.request.AddCustomerRequestDto;
-import com.bankTransaction.transaction.model.dto.request.UpdateCustomerRequestDto;
+import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
+import com.bankTransaction.transaction.model.dto.customer.CustomerDto;
+import com.bankTransaction.transaction.model.dto.customer.AddCustomerRequestDto;
+import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestDto;
 import com.bankTransaction.transaction.model.entity.Account;
 import com.bankTransaction.transaction.model.entity.Customer;
+import com.bankTransaction.transaction.repository.AccountRepository;
 import com.bankTransaction.transaction.repository.CustomerRepository;
 import com.bankTransaction.transaction.service.CustomerService;
 import lombok.Builder;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -27,10 +31,11 @@ public class CustomerServiceImp implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final AccountRepository accountRepository;
 
     @Override
     public List<CustomerDto> getList() {
-        return customerMapper.toStudentDtoList(customerRepository.findAll());
+        return customerMapper.toCustomerDtoList(customerRepository.findAll());
     }
 
     @Override
@@ -41,8 +46,9 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public CustomerDto add(AddCustomerRequestDto addCustomerRequestDto) {
+
         var customer = customerMapper.toCustomer(addCustomerRequestDto);
-        if (customerRepository.existsById(customer.getId())) {
+        if (customerRepository.existsByEmail(customer.getEmail())) {
             throw new IllegalArgumentException("no no no");
         }
 
@@ -63,33 +69,22 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public void delete(Integer id) {
-         customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-         customerRepository.deleteById(id);
+        customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        customerRepository.deleteById(id);
     }
 
-    private Customer getUpdatedCustomer(Integer id, UpdateCustomerRequestDto customer) {
-        var optionalCustomer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    private Customer getUpdatedCustomer(Integer id, UpdateCustomerRequestDto updateCustomerRequestDto) {
+        var customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        //pacth mapper
-        String firstname = optionalCustomer.getFirstName().equalsIgnoreCase(customer.getFirstName())
-                ? optionalCustomer.getFirstName() : customer.getFirstName();
-        String lastname = optionalCustomer.getLastName().equalsIgnoreCase(customer.getLastName()) ?
-                optionalCustomer.getLastName() : customer.getLastName();
-        String email = optionalCustomer.getEmail().equalsIgnoreCase(customer.getEmail()) ?
-                optionalCustomer.getEmail() : customer.getEmail();
-        String phone = optionalCustomer.getPhone().equalsIgnoreCase(customer.getPhone()) ?
-                optionalCustomer.getPhone() : customer.getPhone();
-        LocalDate dateOfBirth = optionalCustomer.getDateOfBirth().equals(customer.getDateOfBirth()) ?
-                optionalCustomer.getDateOfBirth() : customer.getDateOfBirth();
-        optionalCustomer.setFirstName(firstname);
-        optionalCustomer.setLastName(lastname);
-        optionalCustomer.setEmail(email);
-        optionalCustomer.setPhone(phone);
-        optionalCustomer.setDateOfBirth(dateOfBirth);
-        return optionalCustomer;
+        Optional.ofNullable(updateCustomerRequestDto.getFirstName()).ifPresent(customer::setFirstName);
+        Optional.ofNullable(updateCustomerRequestDto.getLastName()).ifPresent(customer::setLastName);
+        Optional.ofNullable(updateCustomerRequestDto.getEmail()).ifPresent(customer::setEmail);
+        Optional.ofNullable(updateCustomerRequestDto.getPhone()).ifPresent(customer::setPhone);
+        Optional.ofNullable(updateCustomerRequestDto.getDateOfBirth()).ifPresent(customer::setDateOfBirth);
+        return customer;
     }
 
-    private Account getDefaultAccount(Customer customer){//create
+    private Account getDefaultAccount(Customer customer) {//create
         return Account.builder()
                 .accountNumber(generateAccountNumber())
                 .balance(BigDecimal.valueOf(100))

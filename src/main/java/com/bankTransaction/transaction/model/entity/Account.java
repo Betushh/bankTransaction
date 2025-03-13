@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Entity
 @Builder
 @Table(name = "accounts")
-public class Account extends BaseEntity{
+public class Account extends BaseEntity {
 
     @Column(name = "account_number", nullable = false)
     private String accountNumber;
@@ -31,6 +31,9 @@ public class Account extends BaseEntity{
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private Customer customer;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private Transaction transaction;
 
 
 }

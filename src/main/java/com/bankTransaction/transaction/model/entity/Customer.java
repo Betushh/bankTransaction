@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "customers")
 @Builder
-public class Customer extends BaseEntity{
+public class Customer extends BaseEntity {
 
     @Column(name = "name")
     private String firstName;
@@ -27,9 +27,9 @@ public class Customer extends BaseEntity{
     private String phone;
 
     @Column(name = "date_of_birth")
-   private LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    @OneToMany(mappedBy = "customer",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Account> accounts;
 
 }
