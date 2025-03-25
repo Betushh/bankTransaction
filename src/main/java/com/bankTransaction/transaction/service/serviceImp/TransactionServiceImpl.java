@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,47 +28,30 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountService accountService;
 
     @Override
-    public TransactionDto createTransaction(String accountNumber, BigDecimal amount,
-                                            TransactionType transactionType, TransactionStatus transactionStatus) {
-
+    public TransactionDto createTransaction(String accountNumber, BigDecimal amount, TransactionType transactionType) {
         var account = accountRepository.findAccountByAccountNumber(accountNumber);
-        if (!(AccountStatus.ACTIVE.equals(account.getAccountStatus()))) {
-            throw new IllegalArgumentException("no no no");
-        }
 
         Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setTransactionStatus(transactionStatus);
+        transaction.setTransactionStatus(TransactionStatus.PENDING);
         transaction.setTransactionType(transactionType);
+        transaction.setAmount(amount);
         transaction.setAccount(account);
-        transaction = transactionRepository.save(transaction);
+        account.setTransaction(List.of(transaction));
 
-        if (transactionStatus == TransactionStatus.SUCCESS) {
-            if (transactionType == TransactionType.TOP_UP) {
-                accountService.increaseAccountBalance(accountNumber, amount);
-            } else if (transactionType == TransactionType.PURCHASE) {
-                accountService.decreaseAccountBalance(accountNumber, amount);
-            }
-
-
-        }
-        return transactionMapper.toTransactionDto(transaction);
+        return transactionMapper.toTransactionDto(transactionRepository.save(transaction));
     }
 
     @Override
-    public TransactionDto topUpBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus) {
+    public TransactionDto topUpBalanceTransaction(Long transactionId, TransactionStatus transactionStatus) {
 
-        var account = accountRepository.findAccountByAccountNumber(accountNumber);
-        if (!(AccountStatus.ACTIVE.equals(account.getAccountStatus()))) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(IllegalAccessError::new);
+
+        if (!(transaction.getTransactionType() == TransactionType.TOP_UP)) {
             throw new IllegalArgumentException("no no no");
         }
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setTransactionStatus(transactionStatus);
-        transaction.setTransactionType(TransactionType.TOP_UP);
-        transaction.setAccount(account);
-        transaction = transactionRepository.save(transaction);
+        String accountNumber = transaction.getAccount().getAccountNumber();
+        var amount = transaction.getAmount();
 
         switch (transactionStatus) {
             case SUCCESS -> accountService.increaseAccountBalance(accountNumber, amount);
@@ -75,30 +59,33 @@ public class TransactionServiceImpl implements TransactionService {
             case PENDING -> log.info("pending");
         }
 
+        transaction.setTransactionStatus(transactionStatus);
+        transactionRepository.save(transaction);
         return transactionMapper.toTransactionDto(transaction);
     }
 
     @Override
-    public TransactionDto purchaseBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus) {
+    public TransactionDto purchaseBalanceTransaction(Long transactionId, TransactionStatus transactionStatus) {
 
-        var account = accountRepository.findAccountByAccountNumber(accountNumber);
-        if (!(AccountStatus.ACTIVE.equals(account.getAccountStatus()))) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(IllegalAccessError::new);
+
+        if (!(transaction.getTransactionType() == TransactionType.PURCHASE)) {
             throw new IllegalArgumentException("no no no");
         }
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        transaction.setTransactionStatus(transactionStatus);
-        transaction.setTransactionType(TransactionType.TOP_UP);
-        transaction.setAccount(account);
-        transaction = transactionRepository.save(transaction);
+        String accountNumber = transaction.getAccount().getAccountNumber();
+        var amount = transaction.getAmount();
 
         switch (transactionStatus) {
             case SUCCESS -> accountService.decreaseAccountBalance(accountNumber, amount);
+
             case FAILED -> throw new IllegalArgumentException("no no no");
             case PENDING -> log.info("pending");
         }
 
+        transaction.setTransactionStatus(transactionStatus);
+        transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+        transactionRepository.save(transaction);
         return transactionMapper.toTransactionDto(transaction);
     }
 
@@ -113,12 +100,6 @@ public class TransactionServiceImpl implements TransactionService {
         return null;
     }
 
-    @Override
-    public TransactionDto changePaymentStatus(Long transactionId, TransactionStatus transactionStatus) {
-        var transaction = transactionRepository.findById(transactionId).orElseThrow(IllegalArgumentException::new);
-        transaction.setTransactionStatus(transactionStatus);
-        return transactionMapper.toTransactionDto(transaction);
-    }
 
 }
 

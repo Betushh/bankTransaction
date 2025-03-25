@@ -19,6 +19,5 @@ public interface AccountService {
 
     AccountDto decreaseAccountBalance(String accountNumber, BigDecimal amount);
 
-
     void delete(Integer id);
 }

@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -32,8 +34,8 @@ public class Account extends BaseEntity {
     @JsonBackReference
     private Customer customer;
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    private Transaction transaction;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Transaction> transaction;
 
 
 }

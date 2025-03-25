@@ -6,19 +6,16 @@ import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.model.dto.transactiion.TransactionDto;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public interface TransactionService {
 
-    TransactionDto createTransaction(String accountNumber, BigDecimal amount,
-                                     TransactionType transactionType, TransactionStatus transactionStatus);
+    TransactionDto createTransaction(String accountNumber, BigDecimal amount, TransactionType transactionType);
 
-    TransactionDto topUpBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus);
+    TransactionDto topUpBalanceTransaction(Long transactionId, TransactionStatus transactionStatus);
 
-    TransactionDto purchaseBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus);
+    TransactionDto purchaseBalanceTransaction(Long transactionId, TransactionStatus transactionStatus);
 
     TransactionDto refundBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus);
 
-    TransactionDto changePaymentStatus(Long transactionId, TransactionStatus transactionStatus);
 
 }
