@@ -34,6 +34,8 @@ public class Account extends BaseEntity {
     @JsonBackReference
     private Customer customer;
 
+    @ToString.Exclude
+    @JsonBackReference
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transaction;
 

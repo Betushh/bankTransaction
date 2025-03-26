@@ -1,8 +1,9 @@
 package com.bankTransaction.transaction.service.serviceImp;
 
 import com.bankTransaction.transaction.enumeration.AccountStatus;
+import com.bankTransaction.transaction.exception.AlreadyExistException;
+import com.bankTransaction.transaction.exception.NotFoundException;
 import com.bankTransaction.transaction.mapper.CustomerMapper;
-import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
 import com.bankTransaction.transaction.model.dto.customer.CustomerDto;
 import com.bankTransaction.transaction.model.dto.customer.AddCustomerRequestDto;
 import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestDto;
@@ -17,11 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,27 +35,39 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public List<CustomerDto> getList() {
-        return customerMapper.toCustomerDtoList(customerRepository.findAll());
+        log.info("Fetching all customers");
+        var customers = customerRepository.findAll();
+        log.info("Fetched {} customers", customers.size());
+        return customerMapper.toCustomerDtoList(customers);
     }
 
     @Override
     public CustomerDto getCustomerByID(Integer id) {
-        return customerMapper.toCustomerDto(customerRepository
-                .findById(id).orElseThrow(IllegalArgumentException::new));
+        log.info("Fetching customer with ID: {}", id);
+        var customer = customerRepository
+                .findById(id).orElseThrow(()-> {
+                    log.warn("Customer with ID {} not found", id);
+                  return new NotFoundException("Customer not found");
+                });
+        log.info("Customer found: {}", customer.getEmail());
+        return customerMapper.toCustomerDto(customer);
     }
 
     @Override
     public CustomerDto add(AddCustomerRequestDto addCustomerRequestDto) {
 
+        log.info("Adding new customer with email: {}", addCustomerRequestDto.getEmail());
         var customer = customerMapper.toCustomer(addCustomerRequestDto);
         if (customerRepository.existsByEmail(customer.getEmail())) {
-            throw new IllegalArgumentException("no no no");
+            log.warn("Customer with email {} already exists", customer.getEmail());
+            throw new AlreadyExistException("Customer is already exist");
         }
 
-        Account defaultAccount = getDefaultAccount(customer);
+        Account defaultAccount = createDefaultAccount(customer);
         customer.setAccounts(List.of(defaultAccount));
 
         var savedCustomer = customerRepository.save(customer);
+        log.info("New customer added successfully: {}", savedCustomer.getId());
         return customerMapper.toCustomerDto(savedCustomer);
     }
 
@@ -69,31 +81,49 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public void delete(Integer id) {
-        customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        log.info("Deleting customer with ID: {}", id);
+        customerRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Tried to delete non-existing customer with ID {}", id);
+                    return new NotFoundException("Customer not found");
+                });
+
         customerRepository.deleteById(id);
+        log.info("Customer with ID {} deleted successfully", id);
     }
 
-    private Customer getUpdatedCustomer(Integer id, UpdateCustomerRequestDto updateCustomerRequestDto) {
-        var customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    private Customer getUpdatedCustomer(Integer id, UpdateCustomerRequestDto dto) {
+        var customer = customerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Customer not found with ID: " + id));
 
-        Optional.ofNullable(updateCustomerRequestDto.getFirstName()).ifPresent(customer::setFirstName);
-        Optional.ofNullable(updateCustomerRequestDto.getLastName()).ifPresent(customer::setLastName);
-        Optional.ofNullable(updateCustomerRequestDto.getEmail()).ifPresent(customer::setEmail);
-        Optional.ofNullable(updateCustomerRequestDto.getPhone()).ifPresent(customer::setPhone);
-        Optional.ofNullable(updateCustomerRequestDto.getDateOfBirth()).ifPresent(customer::setDateOfBirth);
+        updateIfPresent(dto.getFirstName(), customer::setFirstName);
+        updateIfPresent(dto.getLastName(), customer::setLastName);
+        updateIfPresent(dto.getEmail(), customer::setEmail);
+        updateIfPresent(dto.getPhone(), customer::setPhone);
+        updateIfPresent(dto.getDateOfBirth(), customer::setDateOfBirth);
+
         return customer;
     }
 
-    private Account getDefaultAccount(Customer customer) {//create
-        return Account.builder()
-                .accountNumber(generateAccountNumber())
-                .balance(BigDecimal.valueOf(100))
-                .accountStatus(AccountStatus.ACTIVE)
-                .customer(customer)
-                .build();
+    private <T> void updateIfPresent(T value, Consumer<T> updater) {
+        if (value != null) {
+            updater.accept(value);
+        }
     }
 
-    private String generateAccountNumber() {
-        return "ACC" + UUID.randomUUID().toString().substring(20);
+        private Account createDefaultAccount (Customer customer){
+            log.trace("Creating default account for customer: {}", customer.getEmail());
+            var account =  Account.builder()
+                    .accountNumber(generateAccountNumber())
+                    .balance(BigDecimal.valueOf(100))
+                    .accountStatus(AccountStatus.ACTIVE)
+                    .customer(customer)
+                    .build();
+            log.debug("Default account created: {}", account.getAccountNumber());
+            return account;
+        }
+
+        private String generateAccountNumber () {
+            return "ACC" + UUID.randomUUID().toString().substring(20);
+        }
     }
-}

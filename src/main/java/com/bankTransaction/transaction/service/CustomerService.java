@@ -5,6 +5,7 @@ import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestD
 import java.util.List;
 
 public interface CustomerService {
+
     List<CustomerDto> getList();
 
     CustomerDto getCustomerByID(Integer id);

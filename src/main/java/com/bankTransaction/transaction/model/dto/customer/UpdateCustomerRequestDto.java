@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class UpdateCustomerRequestDto {
+
     private String firstName;
     private String lastName;
     private String email;

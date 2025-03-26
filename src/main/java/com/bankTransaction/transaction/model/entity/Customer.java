@@ -1,7 +1,4 @@
 package com.bankTransaction.transaction.model.entity;
-
-
-import com.bankTransaction.transaction.enumeration.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
