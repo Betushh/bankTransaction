@@ -15,7 +15,9 @@ public interface TransactionService {
 
     TransactionDto purchaseBalanceTransaction(Long transactionId, TransactionStatus transactionStatus);
 
-    TransactionDto refundBalanceTransaction(String accountNumber, BigDecimal amount, TransactionStatus transactionStatus);
+    TransactionDto refundBalanceTransaction(Long transactionId, TransactionStatus transactionStatus);
+
+    void delete(Integer id);
 
 
 }

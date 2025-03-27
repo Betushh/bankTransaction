@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 public class AccountDto {
     private String accountNumber;
     private BigDecimal balance;
-    private Customer customer;
     private AccountStatus accountStatus;
+    private Customer customer;
 }

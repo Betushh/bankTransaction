@@ -1,8 +1,12 @@
 package com.bankTransaction.transaction.scheduler;
 
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
+import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.model.entity.Transaction;
 import com.bankTransaction.transaction.repository.TransactionRepository;
+import com.bankTransaction.transaction.service.AccountService;
+import com.bankTransaction.transaction.service.TransactionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +24,25 @@ import java.util.List;
 public class Schedule {
 
     private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
 
 
-    @Scheduled(cron = "0 39 15 * * ?", zone = "Asia/Baku")
+    @Scheduled(cron = "0 30 02 * * ?", zone = "Asia/Baku")
+    @Transactional
     public void scheduleCron() {
         List<Transaction> transactions = transactionRepository.findAll().stream()
                 .filter(transaction -> TransactionStatus.PENDING.equals(transaction.getTransactionStatus()))
-                .peek(transaction -> transaction.setTransactionStatus(TransactionStatus.SUCCESS))
                 .toList();
+
+        for (Transaction transaction : transactions) {
+            switch (transaction.getTransactionType()) {
+                case TOP_UP ->
+                        transactionService.topUpBalanceTransaction(transaction.getId(), transaction.getTransactionStatus());// fail olsa?, hemise pending
+                case PURCHASE ->
+                        transactionService.purchaseBalanceTransaction(transaction.getId(), transaction.getTransactionStatus());
+//                case REFUND -> transactionService.refundBalanceTransaction(transaction.getId(),transaction.getTransactionStatus());
+            }
+        }
 
         transactionRepository.saveAll(transactions);
 

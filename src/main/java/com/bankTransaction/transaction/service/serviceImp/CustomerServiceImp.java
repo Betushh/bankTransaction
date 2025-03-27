@@ -4,6 +4,7 @@ import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.bankTransaction.transaction.exception.AlreadyExistException;
 import com.bankTransaction.transaction.exception.NotFoundException;
 import com.bankTransaction.transaction.mapper.CustomerMapper;
+import com.bankTransaction.transaction.model.dto.account.AccountGenerator;
 import com.bankTransaction.transaction.model.dto.customer.CustomerDto;
 import com.bankTransaction.transaction.model.dto.customer.AddCustomerRequestDto;
 import com.bankTransaction.transaction.model.dto.customer.UpdateCustomerRequestDto;
@@ -63,7 +64,7 @@ public class CustomerServiceImp implements CustomerService {
             throw new AlreadyExistException("Customer is already exist");
         }
 
-        Account defaultAccount = createDefaultAccount(customer);
+        Account defaultAccount = AccountGenerator.createDefaultAccount(customer);
         customer.setAccounts(List.of(defaultAccount));
 
         var savedCustomer = customerRepository.save(customer);
@@ -111,19 +112,5 @@ public class CustomerServiceImp implements CustomerService {
         }
     }
 
-        private Account createDefaultAccount (Customer customer){
-            log.trace("Creating default account for customer: {}", customer.getEmail());
-            var account =  Account.builder()
-                    .accountNumber(generateAccountNumber())
-                    .balance(BigDecimal.valueOf(100))
-                    .accountStatus(AccountStatus.ACTIVE)
-                    .customer(customer)
-                    .build();
-            log.debug("Default account created: {}", account.getAccountNumber());
-            return account;
-        }
 
-        private String generateAccountNumber () {
-            return "ACC" + UUID.randomUUID().toString().substring(20);
-        }
     }

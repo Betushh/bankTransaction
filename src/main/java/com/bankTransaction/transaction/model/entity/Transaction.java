@@ -1,18 +1,14 @@
 package com.bankTransaction.transaction.model.entity;
 
-
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
 import com.bankTransaction.transaction.enumeration.TransactionType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
 import java.math.BigDecimal;
 
-
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

@@ -22,7 +22,7 @@ public class AccountController {
         return accountService.getList();
     }
 
-    @GetMapping("/id")
+    @GetMapping("/ActiveAccount/id")
     @ResponseStatus(HttpStatus.OK)
     public List<AccountDto> getActiveAccountsByCustomerId(@RequestParam Integer id) {
         return accountService.getActiveAccountsByCustomerId(id);
@@ -30,8 +30,8 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto add(AddAccountRequestDto addAccountRequestDto) {
-        return accountService.add(addAccountRequestDto);
+    public AccountDto add(Integer customerId) {
+        return accountService.add(customerId);
     }
 
     @GetMapping("/{id}")

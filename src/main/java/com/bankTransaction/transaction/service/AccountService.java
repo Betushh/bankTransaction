@@ -1,4 +1,5 @@
 package com.bankTransaction.transaction.service;
+
 import com.bankTransaction.transaction.model.dto.account.AccountDto;
 import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
 
@@ -9,15 +10,17 @@ public interface AccountService {
 
     List<AccountDto> getList();
 
-   List <AccountDto> getActiveAccountsByCustomerId(Integer id);
+    List<AccountDto> getActiveAccountsByCustomerId(Integer id);
 
-    AccountDto add(AddAccountRequestDto addAccountRequestDto);
+    AccountDto add(Integer customerId);
 
     List<AccountDto> getAccountsByCustomerId(Integer id);
 
     AccountDto increaseAccountBalance(String accountNumber, BigDecimal amount);
 
     AccountDto decreaseAccountBalance(String accountNumber, BigDecimal amount);
+
+    AccountDto refundAccountBalance(String accountNumber, BigDecimal amount);
 
     void delete(Integer id);
 }

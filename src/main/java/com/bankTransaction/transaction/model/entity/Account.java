@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "accounts")
 public class Account extends BaseEntity {
 
-    @Column(name = "account_number", nullable = false)
+    @Column(name = "account_number", nullable = false, unique = true)
     private String accountNumber;
 
     @Column(nullable = false)

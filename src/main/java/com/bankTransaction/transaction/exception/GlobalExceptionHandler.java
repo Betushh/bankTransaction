@@ -21,8 +21,32 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAlreadyExistsException(NotFoundException ex) {
+    public ErrorResponse handleAlreadyExistsException(AlreadyExistException ex) {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(MismatchException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleMismatchExceptionException(MismatchException ex) {
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientBalanceException.class)
+    @ResponseStatus(HttpStatus.PAYMENT_REQUIRED)
+    public ErrorResponse handleInsufficientBalanceException(InsufficientBalanceException ex) {
+        return new ErrorResponse(HttpStatus.PAYMENT_REQUIRED.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(OperationFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleOperationFailedException(OperationFailedException ex) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(OperationExpiredException.class)
+    @ResponseStatus(HttpStatus.GONE)
+    public ErrorResponse handleOperationExpiredException(OperationExpiredException ex) {
+        return new ErrorResponse(HttpStatus.GONE.value(), ex.getMessage());
     }
 
 }
