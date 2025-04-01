@@ -27,8 +27,8 @@ public class Schedule {
     private final TransactionService transactionService;
 
 
-    @Scheduled(cron = "0 30 02 * * ?", zone = "Asia/Baku")
-    @Transactional
+    @Scheduled(cron = "0 58 11 * * ?", zone = "Asia/Baku")
+    @Transactional// bunsuz alinmir
     public void scheduleCron() {
         List<Transaction> transactions = transactionRepository.findAll().stream()
                 .filter(transaction -> TransactionStatus.PENDING.equals(transaction.getTransactionStatus()))
@@ -37,15 +37,14 @@ public class Schedule {
         for (Transaction transaction : transactions) {
             switch (transaction.getTransactionType()) {
                 case TOP_UP ->
-                        transactionService.topUpBalanceTransaction(transaction.getId(), transaction.getTransactionStatus());// fail olsa?, hemise pending
+                        transactionService.topUpBalanceTransaction(transaction.getId(), TransactionStatus.SUCCESS);
                 case PURCHASE ->
-                        transactionService.purchaseBalanceTransaction(transaction.getId(), transaction.getTransactionStatus());
-//                case REFUND -> transactionService.refundBalanceTransaction(transaction.getId(),transaction.getTransactionStatus());
+                        transactionService.purchaseBalanceTransaction(transaction.getId(), TransactionStatus.SUCCESS);
+                case REFUND -> transactionService.refundBalanceTransaction(transaction.getId(),TransactionStatus.SUCCESS);
             }
         }
 
         transactionRepository.saveAll(transactions);
-
-        log.info("Fixed cron - " + System.currentTimeMillis() / 1000);
+        log.info("Transactions are made - " + System.currentTimeMillis() / 1000);
     }
 }

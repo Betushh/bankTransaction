@@ -15,6 +15,10 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "transactions")
+//@NamedEntityGraph(
+//        name = "Transaction.account",
+//        attributeNodes = @NamedAttributeNode("account")
+//)
 public class Transaction extends BaseEntity {
 
     @NotNull

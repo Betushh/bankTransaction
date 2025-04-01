@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-@Hidden
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)

@@ -1,6 +1,5 @@
 package com.bankTransaction.transaction.service.serviceImp;
 
-import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
 import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.exception.MismatchException;
@@ -66,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new MismatchException("Transaction type is not matched");
         }
 
-        if(!(transaction.getTransactionStatus().equals(TransactionStatus.PENDING))){
+        if (!(transaction.getTransactionStatus().equals(TransactionStatus.PENDING))) {
             log.warn("Transaction is already done: {}", transactionId);
             throw new OperationExpiredException("Transaction operation is already done");
         }
@@ -104,7 +103,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new MismatchException("Transaction type is not matched");
         }
 
-        if(!(transaction.getTransactionStatus().equals(TransactionStatus.PENDING))){
+        if (!(transaction.getTransactionStatus().equals(TransactionStatus.PENDING))) {
             log.warn("Transaction is already done: {}", transactionId);
             throw new OperationExpiredException("Transaction operation is already done");
         }
@@ -138,57 +137,74 @@ public class TransactionServiceImpl implements TransactionService {
                 new NotFoundException("Transaction not found"));
 
 
-        if (!(transaction.getTransactionType() == TransactionType.PURCHASE)) {
+        if (transaction.getTransactionType() == TransactionType.TOP_UP) {
             log.warn("Transaction type cannot be refunded for ID: {}", transactionId);
             throw new MismatchException("Transaction type cannot be refunded");
         }
 
-        if(!(transaction.getTransactionStatus().equals(TransactionStatus.SUCCESS))){
-            log.warn("Refund operation has already done: {}", transactionId);
-            throw new OperationExpiredException("Refund operation has already done");
-        }
+        if (!((transaction.getTransactionType() == TransactionType.PURCHASE
+                && transaction.getTransactionStatus() == TransactionStatus.SUCCESS) ||
+                (transaction.getTransactionType() == TransactionType.REFUND
+                        && transaction.getTransactionStatus() == TransactionStatus.PENDING))) {
 
-        if (transactionRepository.findAll().stream()
-                .anyMatch(t -> t.getAccount().getId().equals(transaction.getAccount().getId()) &&
-//                        t.getOriginalTransaction().getId().equals(transaction.getOriginalTransaction().getId()) &&
-                        t.getTransactionType().equals(TransactionType.REFUND) &&
-                        t.getTransactionStatus().equals(TransactionStatus.SUCCESS))) {
-            throw new OperationFailedException("Refund has already been processed for this transaction.");
+            log.warn("Refund operation mismatched: {}", transactionId);
+            throw new MismatchException("Operation is not matched");
         }
 
         String accountNumber = transaction.getAccount().getAccountNumber();
         var amount = transaction.getAmount();
 
-        Transaction refundedTransaction = Transaction.builder()
-                .transactionStatus(TransactionStatus.PENDING)
-                .transactionType(TransactionType.REFUND)
-                .amount(transaction.getAmount())
-                .account(transaction.getAccount())
-                .build();
-
-        switch (transactionStatus) {
-            case SUCCESS -> {
-                log.info("Refund successful for account: {} with amount: {}", accountNumber, amount);
-                accountService.refundAccountBalance(accountNumber, amount);
+        switch (transaction.getTransactionType()) {
+            case PURCHASE -> {
+                switch (transactionStatus) {
+                    case SUCCESS -> {
+                        log.info("Purchase is successfully refunded for account: {} with amount: {}"
+                                , accountNumber, amount);
+                        accountService.refundAccountBalance(accountNumber, amount);
+                        transaction.setTransactionStatus(TransactionStatus.REFUNDED);
+                    }
+                    case FAILED -> {
+                        log.error("Purchase failed for transaction ID: {}", transactionId);
+                        throw new OperationFailedException("Operation failed");
+                    }
+                    case PENDING -> {
+                        log.info("Transaction is pending for ID: {}", transactionId);
+                    }
+                    case REFUNDED -> {
+                        log.error("Purchase is already refunded for transaction ID: {}", transactionId);
+                        throw new OperationFailedException("Operation is already refunded");
+                    }
+                }
             }
-            case FAILED -> {
-                log.error("Purchase failed for transaction ID: {}", transactionId);
-                throw new OperationFailedException("Operation failed");
+            case REFUND -> {
+                switch (transactionStatus) {
+                    case SUCCESS -> {
+                        log.info("Refund successful for account: {} with amount: {}", accountNumber, amount);
+                        accountService.refundAccountBalance(accountNumber, amount);
+                        transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+                    }
+                    case FAILED -> {
+                        log.error("Refund failed for transaction ID: {}", transactionId);
+                        throw new OperationFailedException("Operation failed");
+                    }
+                    case PENDING -> {
+                        log.info("Operation is pending for transaction ID: {}", transactionId);
+                    }
+                    case REFUNDED -> {
+                        log.error("Refund operation is mismatched for transaction ID: {}", transactionId);
+                        throw new MismatchException("Operation is not matched");
+                    }
+                }
             }
-            case PENDING -> log.info("Transaction is pending for ID: {}", transactionId);
         }
 
-        refundedTransaction.setTransactionStatus(transactionStatus);
-        transactionRepository.save(refundedTransaction);
+        transactionRepository.save(transaction);
         log.info("Transaction {} updated to status: {}", transactionId, transactionStatus);
-        return transactionMapper.toTransactionDto(refundedTransaction);
+        return transactionMapper.toTransactionDto(transaction);
     }
 
     @Override
     public void delete(Integer id) {
 
     }
-
-
 }
-
