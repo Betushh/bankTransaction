@@ -1,8 +1,7 @@
 package com.bankTransaction.transaction.enumeration;
 
 public enum TransactionType {
-    DEPOSIT,
-    WITHDRAWAL,
+    TOP_UP,
     PURCHASE,
-    TRANSIT;
+    REFUND;
 }

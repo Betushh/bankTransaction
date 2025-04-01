@@ -1,35 +1,38 @@
 package com.bankTransaction.transaction.model.entity;
-
-
-import com.bankTransaction.transaction.enumeration.CustomerStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "customers")
-public class Customer {
+@Builder
+public class Customer extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "name")
+    private String firstName;
 
-    @Column(name = "firstname", nullable = false)
-    private String firsName;
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "middlename")
-    private String middleName;
 
-    @Column(nullable = false)
-    private String mail;
+    @Column(unique = true)
+    private String email;
 
-    @Column(name = "phonenumber", nullable = false)
-    private String phoneNumber;
+    @Column(unique = true)
+    private String phone;
 
-    @Enumerated
-    @Column(name = "customer_status", nullable = false)
-    private CustomerStatus customerStatus;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @ToString.Exclude
+    @JsonBackReference
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Account> accounts;
+
 }
