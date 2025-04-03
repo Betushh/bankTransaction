@@ -171,8 +171,8 @@ public class TransactionServiceImpl implements TransactionService {
                         log.info("Transaction is pending for ID: {}", transactionId);
                     }
                     case REFUNDED -> {
-                        log.error("Purchase is already refunded for transaction ID: {}", transactionId);
-                        throw new OperationFailedException("Operation is already refunded");
+                        log.error("Purchase cannot be refunded without payment for transaction ID: {}", transactionId);
+                        throw new OperationExpiredException("Operation cannot be refunded without payment");
                     }
                 }
             }

@@ -40,7 +40,8 @@ public class Schedule {
                         transactionService.topUpBalanceTransaction(transaction.getId(), TransactionStatus.SUCCESS);
                 case PURCHASE ->
                         transactionService.purchaseBalanceTransaction(transaction.getId(), TransactionStatus.SUCCESS);
-                case REFUND -> transactionService.refundBalanceTransaction(transaction.getId(),TransactionStatus.SUCCESS);
+                case REFUND ->
+                        transactionService.refundBalanceTransaction(transaction.getId(), TransactionStatus.SUCCESS);
             }
         }
 

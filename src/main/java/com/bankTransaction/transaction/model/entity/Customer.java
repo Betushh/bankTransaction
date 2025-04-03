@@ -1,6 +1,7 @@
 package com.bankTransaction.transaction.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
