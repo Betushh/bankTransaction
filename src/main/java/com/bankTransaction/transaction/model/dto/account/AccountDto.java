@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 
 @Data
 public class AccountDto {
+
     private String accountNumber;
     private BigDecimal balance;
     private AccountStatus accountStatus;
     private Customer customer;
+
 }

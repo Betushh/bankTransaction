@@ -1,6 +1,5 @@
 package com.bankTransaction.transaction.model.entity;
 
-
 import com.bankTransaction.transaction.enumeration.AccountStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -29,7 +28,7 @@ public class Account extends BaseEntity {
     private AccountStatus accountStatus;
 
     @ToString.Exclude
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     @JsonBackReference
     private Customer customer;
@@ -38,6 +37,5 @@ public class Account extends BaseEntity {
     @JsonBackReference
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transaction;
-
 
 }

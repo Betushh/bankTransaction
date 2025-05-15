@@ -1,19 +1,22 @@
 package com.bankTransaction.transaction.model.dto.account;
 
-import com.bankTransaction.transaction.enumeration.AccountStatus;
-import com.bankTransaction.transaction.model.entity.Customer;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Builder
 @Data
 public class AddAccountRequestDto {
 
+    @NotBlank(message = "First name is required")
     private String firstName;
+
+    @NotBlank(message = "Last name is required")
     private String lastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
-//    private String phone;//--
+
 }

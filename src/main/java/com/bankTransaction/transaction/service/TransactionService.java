@@ -1,6 +1,5 @@
 package com.bankTransaction.transaction.service;
 
-
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
 import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.model.dto.transactiion.TransactionDto;
@@ -18,7 +17,5 @@ public interface TransactionService {
     TransactionDto refundBalanceTransaction(Long transactionId, TransactionStatus transactionStatus);
 
     void delete(Integer id);
-
-
 
 }

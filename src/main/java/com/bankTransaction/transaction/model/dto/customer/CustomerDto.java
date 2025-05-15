@@ -2,14 +2,11 @@ package com.bankTransaction.transaction.model.dto.customer;
 
 import com.bankTransaction.transaction.model.entity.Account;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Data
-@RequiredArgsConstructor
 public class CustomerDto {
 
     private String firstName;
@@ -18,6 +15,5 @@ public class CustomerDto {
     private String phone;
     private LocalDate dateOfBirth;
     private List<Account> accounts;
-
 
 }

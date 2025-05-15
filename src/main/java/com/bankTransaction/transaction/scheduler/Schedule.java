@@ -1,10 +1,8 @@
 package com.bankTransaction.transaction.scheduler;
 
 import com.bankTransaction.transaction.enumeration.TransactionStatus;
-import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.model.entity.Transaction;
 import com.bankTransaction.transaction.repository.TransactionRepository;
-import com.bankTransaction.transaction.service.AccountService;
 import com.bankTransaction.transaction.service.TransactionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,7 @@ public class Schedule {
 
 
     @Scheduled(cron = "0 58 11 * * ?", zone = "Asia/Baku")
-    @Transactional// bunsuz alinmir
+    @Transactional
     public void scheduleCron() {
         List<Transaction> transactions = transactionRepository.findAll().stream()
                 .filter(transaction -> TransactionStatus.PENDING.equals(transaction.getTransactionStatus()))

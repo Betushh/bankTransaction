@@ -1,7 +1,6 @@
 package com.bankTransaction.transaction.service;
 
 import com.bankTransaction.transaction.model.dto.account.AccountDto;
-import com.bankTransaction.transaction.model.dto.account.AddAccountRequestDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,4 +22,5 @@ public interface AccountService {
     AccountDto refundAccountBalance(String accountNumber, BigDecimal amount);
 
     void delete(Integer id);
+
 }
