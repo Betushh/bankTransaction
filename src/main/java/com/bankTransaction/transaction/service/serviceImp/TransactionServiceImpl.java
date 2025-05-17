@@ -13,11 +13,13 @@ import com.bankTransaction.transaction.repository.AccountRepository;
 import com.bankTransaction.transaction.repository.TransactionRepository;
 import com.bankTransaction.transaction.service.AccountService;
 import com.bankTransaction.transaction.service.TransactionService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Enumeration;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +33,16 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountService accountService;
 
     @Override
-    public TransactionDto createTransaction(String accountNumber, BigDecimal amount, TransactionType transactionType) {
+    public TransactionDto createTransaction(String accountNumber, BigDecimal amount, TransactionType transactionType, HttpServletRequest request) {
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        System.out.println("----- Incoming Headers -----");
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            System.out.println(headerName + ": " + headerValue);
+        }
+        System.out.println("-----------------------------");
 
         log.info("Initiating '{}' transaction of amount {} for account '{}'", transactionType, amount, accountNumber);
         var account = accountRepository.findAccountByAccountNumber(accountNumber);
@@ -39,6 +50,8 @@ public class TransactionServiceImpl implements TransactionService {
             log.error("Account '{}' not found", accountNumber);
             throw new NotFoundException("Account not found");
         }
+
+
 
         Transaction transaction = Transaction.builder()
                 .transactionStatus(TransactionStatus.PENDING)

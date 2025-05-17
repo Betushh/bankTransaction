@@ -78,9 +78,6 @@ public class CustomerServiceImp implements CustomerService {
                 .orElseThrow(() -> new IllegalStateException("Authority 'CUSTOMER' not found"));
         newCustomer.setAuthorities(Set.of(authority));
 
-        String token = jwtService.issueToken(newCustomer);
-        newCustomer.setIssueToken(token);
-
         var savedCustomer = customerRepository.save(newCustomer);
 
         log.info("New customer added successfully: {}", savedCustomer.getId());

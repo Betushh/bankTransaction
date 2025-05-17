@@ -41,7 +41,6 @@ public class Customer  extends BaseEntity implements UserDetails {
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
     private Boolean isEnabled;
-    private String issueToken;
 
     @ToString.Exclude
     @EqualsExclude

@@ -30,7 +30,12 @@ public class WebSecurityConfig {
             "/v3/api-docs*/**",
             "/customers/sync",
             "/customers/add",
-            "/auth/login"
+            "/auth/login",
+            "/accounts/increase/{accountNumber}/balance",
+            "/accounts/decrease/{accountNumber}/balance",
+            "/transactions/refund/{transactionId}/{transactionStatus}",
+            "/transactions/topUp/{transactionId}/{transactionStatus}",
+            "/transactions/purchase/{transactionId}/{transactionStatus}"
     };
 
     private static final String[] ADMIN_ENDPOINTS = {

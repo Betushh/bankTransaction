@@ -4,6 +4,7 @@ import com.bankTransaction.transaction.enumeration.TransactionStatus;
 import com.bankTransaction.transaction.enumeration.TransactionType;
 import com.bankTransaction.transaction.model.dto.transactiion.TransactionDto;
 import com.bankTransaction.transaction.service.TransactionService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,9 @@ public class TransactionController {
     public TransactionDto createTransaction(@PathVariable String accountNumber,
                                             @RequestParam @NotNull(message = "Amount is required")
                                             @DecimalMin(value = "0.01", message = "Amount must be greater than 0") BigDecimal amount,
-                                            @RequestParam @NotNull(message = "Transaction type is required") TransactionType transactionType) {
-        return transactionService.createTransaction(accountNumber, amount, transactionType);
+                                            @RequestParam @NotNull(message = "Transaction type is required") TransactionType transactionType,
+                                            HttpServletRequest request) {
+        return transactionService.createTransaction(accountNumber, amount, transactionType,request);
     }
 
     @PutMapping("/topUp/{transactionId}/{transactionStatus}")
